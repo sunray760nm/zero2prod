@@ -1,8 +1,31 @@
 [package]
 name = "zero2prod"
 version = "0.1.0"
+authors = ["WangYue <wangyuezhijing@gmail.com>"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[lib]
+# 在这里可以使用任何路径，但我们遵守社区约定
+# 可以使用"name"字段指定库名称，如果未指定，
+# cargo 将默认使用"package.name"，这正是我们想要的
+path = "src/lib.rs"
+
+# 注意双方括号“[]“：它是TOML语法中的数组
+# 一个项目只能有一个库，但是可以有多个二进制文件
+# 如果要在同一个存储库中管理多个库，可以看看工作区的功能
+
+[[bin]]
+path = "src/main.rs"
+name = "zero2prod"
+
 [dependencies]
+actix-web = "4"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+# 开发依赖项（dev-dependencies）仅在运行测试或者示例时使用
+# 他们没有被包含在最终的应用程序二进制文件中
+[dev-dependencies]
+reqwest = "0.11"
+
