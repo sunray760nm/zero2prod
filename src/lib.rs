@@ -4,18 +4,28 @@ use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use actix_web::dev::Server;
 use std::net::TcpListener;
 
+// async fn health_check(_req: HttpRequest) -> HttpResponse {
+//     HttpResponse::Ok().finish()
+// }
+//
+// // 我们以一种简单的方式开始，总是返回200 OK
+// async fn subscribe() -> HttpResponse {
+//     HttpResponse::Ok().finish()
+// }
 
+/// 健康检查端点
 async fn health_check(_req: HttpRequest) -> HttpResponse {
-    HttpResponse::Ok().finish()
+    HttpResponse::Ok().body("Health check passed!")
 }
 
-// 我们以一种简单的方式开始，总是返回200 OK
+/// 订阅端点
 async fn subscribe() -> HttpResponse {
-    HttpResponse::Ok().finish()
+    HttpResponse::Ok().body("Subscription successful!")
 }
+
 
 // 注意不同的函数起那命
-// 在正常情况下返回“Server”，并删除了‘async’关键字
+// 在正常情况下返回“Server”，并删除了 async 关键字
 // 没有进行.await调用，所以不再需要它了
 pub fn run(listener: TcpListener) -> Result<Server, std::io::Error> {
     let server = HttpServer::new(||{

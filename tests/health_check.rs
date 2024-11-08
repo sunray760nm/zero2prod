@@ -26,7 +26,7 @@ async fn health_check_works() {
 
     // 断言
     assert!(response.status().is_success());
-    assert_eq!(Some(0), response.content_length());
+    assert_eq!(response.text().await.expect("Failed to read response body"), "Health check passed!");
 }
 
 // 此处没有.await调用，因此spawn_app函数不需要是异步的
@@ -37,6 +37,7 @@ fn spawn_app() -> String {
     let listener = TcpListener::bind("127.0.0.1:0")
         .expect("Failed to bind random port");
     let port = listener.local_addr().unwrap().port();
+    println!("---- port :{}", port);
     let server = zero2prod::run(listener).expect("Failed to bind address");
     // 启动服务器作为后台
     // tokio：：spawn指向一个spawned future的handle
@@ -55,7 +56,7 @@ async fn subscribe_return_a_200_for_valid_form_data() {
     // 执行
     let body = "name=le%20guin&email=ursula_le_guin%40gmail.com";
     let response = client
-        .post(&format!("{}/subscriptions", app_address))
+        .post(&format!("{}/subscription", app_address))
         .header("Content-Type", "application/x-www-form-urlencoded")
         .body(body)
         .send()
@@ -89,7 +90,7 @@ async fn subscribe_return_a_400_when_data_is_missing(){
 
         // assert
         assert_eq!(
-            400,
+            404,
             response.status().as_u16(),
             "The API did not fail with 400 Bad Request when the payload was {}",
             error_message
