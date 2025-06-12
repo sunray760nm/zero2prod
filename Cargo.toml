@@ -21,7 +21,7 @@ path = "src/main.rs"
 name = "zero2prod"
 
 [dependencies]
-actix-web = "4"
+actix-web = "4.0.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 
 # 开发依赖项（dev-dependencies）仅在运行测试或者示例时使用

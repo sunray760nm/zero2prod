@@ -6,7 +6,7 @@ use std::net::TcpListener;
 
 // 'tokio::test'是‘tokio::main'的测试等价物
 // 他还使你不必指定‘#[test]'属性
-// 
+//
 // 你可以使用一下命令检查生成了哪些代码
 // ‘cargo expand --test health_check'（<-测试文件名）
 
@@ -26,7 +26,10 @@ async fn health_check_works() {
 
     // 断言
     assert!(response.status().is_success());
-    assert_eq!(response.text().await.expect("Failed to read response body"), "Health check passed!");
+    assert_eq!(
+        response.text().await.expect("Failed to read response body"),
+        "Health check passed!"
+    );
 }
 
 // 此处没有.await调用，因此spawn_app函数不需要是异步的
@@ -34,8 +37,7 @@ async fn health_check_works() {
 // 如果未能执行初始化，则可能会发生panic并让所有的工作崩溃
 
 fn spawn_app() -> String {
-    let listener = TcpListener::bind("127.0.0.1:0")
-        .expect("Failed to bind random port");
+    let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
     let port = listener.local_addr().unwrap().port();
     println!("---- port :{}", port);
     let server = zero2prod::run(listener).expect("Failed to bind address");
@@ -68,14 +70,14 @@ async fn subscribe_return_a_200_for_valid_form_data() {
 }
 
 #[tokio::test]
-async fn subscribe_return_a_400_when_data_is_missing(){
-    // prepare 
+async fn subscribe_return_a_400_when_data_is_missing() {
+    // prepare
     let app_address = spawn_app();
     let client = reqwest::Client::new();
     let test_cases = vec![
         ("name=le%20guin", "missing the email"),
         ("email=ursula_le_guin%40gmail.com", "missing the name"),
-        ("", "missing both name and email")
+        ("", "missing both name and email"),
     ];
 
     for (invalid_bady, error_message) in test_cases {
