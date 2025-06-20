@@ -23,6 +23,26 @@ name = "zero2prod"
 [dependencies]
 actix-web = "4.0.0"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+# 我们需要可选的'derive'功能来使用'serde'过程宏
+# ‘#[derive(Serialize)]' and ‘#[derive(Deserilaze)]'
+# 默认不启用该功能，以避免引入不必要的依赖项
+serde = { version = "1", features = ["derive"]}
+config = "0.13"
+
+# 使用类似于表格的 toml 语法以避免行内字符过多
+[dependencies.sqlx]
+version = "0.8.6"
+default-features = false
+features = [ 
+    "postgres",          # 保持 PostgreSQL 支持
+    "runtime-tokio",     # 使用 Tokio 运行时
+    "macros",            # 启用查询宏
+    "any",               # 多数据库支持（可选）
+    "time",              # 时间类型支持
+    "uuid",              # UUID 类型支持
+    "chrono"             # 日期时间支持
+]
+
 
 # 开发依赖项（dev-dependencies）仅在运行测试或者示例时使用
 # 他们没有被包含在最终的应用程序二进制文件中
