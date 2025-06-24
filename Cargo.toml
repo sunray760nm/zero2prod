@@ -28,6 +28,8 @@ tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 # 默认不启用该功能，以避免引入不必要的依赖项
 serde = { version = "1", features = ["derive"]}
 config = "0.13"
+uuid = { version = "1", features = ["v4"]}
+chrono = "0.4.15"
 
 # 使用类似于表格的 toml 语法以避免行内字符过多
 [dependencies.sqlx]
@@ -40,7 +42,8 @@ features = [
     "any",               # 多数据库支持（可选）
     "time",              # 时间类型支持
     "uuid",              # UUID 类型支持
-    "chrono"             # 日期时间支持
+    "chrono",             # 日期时间支持
+    "migrate",
 ]
 
 

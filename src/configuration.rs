@@ -1,7 +1,5 @@
 //! src/configuration.rs
 
-
-
 #[derive(serde::Deserialize)]
 pub struct Settings {
     pub database: DatabaseSettings,
@@ -37,6 +35,16 @@ impl DatabaseSettings {
             self.host,
             self.port,
             self.database_name,
+        )
+    }
+
+    pub fn connection_string_without_db(&self) -> String {
+        format!(
+            "postgers://{}:{}@{}:{}",
+            self.username,
+            self.password,
+            self.host,
+            self.port
         )
     }
 }
