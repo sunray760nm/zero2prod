@@ -30,6 +30,11 @@ serde = { version = "1", features = ["derive"]}
 config = "0.13"
 uuid = { version = "1", features = ["v4"]}
 chrono = "0.4.15"
+tracing = { version = "0.1", features = ["log"] }
+tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
+tracing-bunyan-formatter = "0.3"
+tracing-log = "0.1"
+
 
 # 使用类似于表格的 toml 语法以避免行内字符过多
 [dependencies.sqlx]
@@ -51,4 +56,5 @@ features = [
 # 他们没有被包含在最终的应用程序二进制文件中
 [dev-dependencies]
 reqwest = "0.11"
+once_cell = "1"
 
