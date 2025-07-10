@@ -11,6 +11,6 @@ ENV SQLX_OFFLINE=true
 # 开始构建二进制文件
 # 使用release参数优化以提高速度
 RUN cargo build --release
+ENV APP_ENVIRONMENT=production
 # 当执行‘docker run’时启动二进制文件
 ENTRYPOINT ["./target/release/zero2prod"]
-
