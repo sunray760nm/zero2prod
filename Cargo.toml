@@ -34,7 +34,8 @@ tracing = { version = "0.1", features = ["log"] }
 tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
 tracing-bunyan-formatter = "0.3"
 tracing-log = "0.1"
-
+secrecy = { version = "0.8", features = ["serde"] }
+tracing-actix-web = "0.7"
 
 # 使用类似于表格的 toml 语法以避免行内字符过多
 [dependencies.sqlx]
@@ -47,7 +48,7 @@ features = [
     "any",               # 多数据库支持（可选）
     "time",              # 时间类型支持
     "uuid",              # UUID 类型支持
-    "chrono",             # 日期时间支持
+    "chrono",            # 日期时间支持
     "migrate",
 ]
 
