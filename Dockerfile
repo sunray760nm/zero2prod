@@ -1,16 +1,20 @@
-# 我们使用最新的rust稳定版作为基础镜像
-FROM rust:latest
-# 把工作目录切换到‘app'，相当于’cd app‘
-# ’app'文件夹将由Docker为我们创建，防止它不存在
+# 构建阶段
+FROM rust:latest AS builder
+
 WORKDIR /app
-# 为链接配置安装所需的系统依赖
 RUN apt update && apt install lld clang -y
-# 将工作中的所有文件复制到Docker镜像中
 COPY . .
 ENV SQLX_OFFLINE=true
-# 开始构建二进制文件
-# 使用release参数优化以提高速度
 RUN cargo build --release
+
+# 运行阶段
+FROM rust:latest AS runtime
+
+WORKDIR /app
+
+# 从构建环境中复制已编译的二进制文件到运行时环境中
+COPY --from=builder /app/target/release/zero2prod zero2prod
+# 在运行时需要配置文件
+COPY configuration configuration
 ENV APP_ENVIRONMENT=production
-# 当执行‘docker run’时启动二进制文件
-ENTRYPOINT ["./target/release/zero2prod"]
+ENTRYPOINT [ "./zero2prod" ]
