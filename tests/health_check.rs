@@ -7,7 +7,6 @@ use reqwest;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
 use once_cell::sync::Lazy;
-use secrecy::ExposeSecret;
 
 // Ensure that the 'tracing' stack is only initialised once using 'once_cell'
 static TRACING: Lazy<()> = Lazy::new(|| {
@@ -69,18 +68,18 @@ async fn spawn_app() -> TestApp {
 
 pub async fn configuration_database(config: &DatabaseSettings) -> PgPool {
     // create database 
-    let mut connection = PgConnection::connect(
-        &config.connection_string_without_db().expose_secret()
+    let mut connection = PgConnection::connect_with(
+        &config.without_db()
     )
-    .await
-    .expect("Failed to connect to postgres");
+        .await
+        .expect("Failed to connect to postgres");
     connection
         .execute(format!(r#"CREATE DATABASE "{}";"#, config.database_name).as_str())
         .await
         .expect("Failed to create database.");
     
     // Migrate database
-    let connection_pool = PgPool::connect(&config.connection_string().expose_secret())
+    let connection_pool = PgPool::connect_with(config.with_db()) 
         .await
         .expect("Failed to connect postgres.") ;
 
