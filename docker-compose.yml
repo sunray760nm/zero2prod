@@ -1,27 +1,44 @@
-version: '3'
+# docker-compose.yml
+
+version: '3.8'
+
 services:
   postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: newsletter
-    ports:
-      - "5432:5432"
+    image: postgres:14-alpine
+    container_name: zero2prod_db
+    restart: always
+    env_file:
+      - .env
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
   app:
-    build: .
+    # 【请注意】这里是根据您的信息填写的镜像地址
+    # 它会从您的阿里云仓库拉取镜像，而不是在服务器上构建
+    image: crpi-mur1up9kawm39joj.cn-shanghai.personal.cr.aliyuncs.com/my-rust-apps/zero2prod:0.3.6
+    
+    container_name: zero2prod_app
+    restart: always
+    ports:
+      # 将服务器的 8000 端口映射到容器的 8000 端口
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      # 这是最关键的配置：告诉应用，数据库的主机名是 'postgres' 服务
+      - APP_DATABASE__HOST=postgres
+      - APP_ENVIRONMENT=production
+    networks:
+      - app-net
     depends_on:
       - postgres
-    environment:
-      DATABASE_URL: postgres://postgres:password@postgres/newsletter
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: password
-      DB_NAME: newsletter
-    ports:
-      - "8000:8000"
+
+networks:
+  app-net:
+    driver: bridge
+
 volumes:
-  pgdata:
+  # 创建一个数据卷来持久化数据库数据
+  postgres_data:

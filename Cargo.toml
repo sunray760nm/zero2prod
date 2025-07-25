@@ -44,7 +44,7 @@ version = "0.8.6"
 default-features = false
 features = [ 
     "postgres",          # 保持 PostgreSQL 支持
-    "runtime-tokio",     # 使用 Tokio 运行时
+    "runtime-tokio-rustls",     # 使用 Tokio 运行时 和 rustls 加密
     "macros",            # 启用查询宏
     "any",               # 多数据库支持（可选）
     "time",              # 时间类型支持
