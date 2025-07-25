@@ -17,15 +17,18 @@ ENV SQLX_OFFLINE=true
 # Build our project
 RUN cargo build --release --bin zero2prod
 
-# 运行时阶段（保持不变）
+# 运行时阶段
 FROM ubuntu:24.04 AS runtime
 WORKDIR /app
 RUN apt-get update -y \
-    && apt-get install -y --no-install-recommends openssl ca-certificates \
+    && apt-get install -y --no-install-recommends openssl ca-certificates postgresql-client \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /app/target/release/zero2prod zero2prod
 COPY configuration configuration
+COPY migrations ./migrations
+COPY scripts/docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
 ENV APP_ENVIRONMENT=production
-ENTRYPOINT ["./zero2prod"]
+ENTRYPOINT ["./docker-entrypoint.sh"]

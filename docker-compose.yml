@@ -16,6 +16,11 @@ services:
       - postgres
     environment:
       DATABASE_URL: postgres://postgres:password@postgres/newsletter
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: newsletter
     ports:
       - "8000:8000"
 volumes:

@@ -2,5 +2,6 @@
 target/
 tests/
 Dockerfile
-scripts/
-migrations/
+# 注意：我们需要保留 scripts/ 和 migrations/ 用于容器内的数据库初始化
+# scripts/
+# migrations/

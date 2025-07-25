@@ -26,8 +26,8 @@ pub async fn subscribe(
 ) -> HttpResponse {
     match insert_subscriber(&pool, &form).await
     {
-        Ok(_) => HttpResponse::Ok().finish(),
-        Err(_) => HttpResponse::InternalServerError().finish()
+        Ok(_) => HttpResponse::Ok().body("Subscription successful!"),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Subscription failed: {:?}", e))
     }
 }
 
